@@ -1,0 +1,102 @@
+;;quote forms
+(defmacro incf (place)
+    `(set! ,place (+ ,place 1))
+)
+(defmacro decf (place)
+    `(set! ,place (- ,place 1))
+)
+(defmacro if (test t-clause else)
+    `(cond (,test ,t-clause) ('default ,else))
+)
+
+(defmacro swap (first last)
+    `(let* (tmp ,first)
+        (begin
+            (set! ,first ,last)
+            (set! ,last tmp)))
+)
+
+(defmacro zero (x) `(def! ,x 0))
+
+(defmacro add (x y)
+   `(+ ,x ,y)
+)
+
+(defmacro swap (first second)
+          `(let* (tmp ,first)
+                (begin
+                    (set! ,first ,second)
+                    (set! ,second tmp)))
+)
+
+
+
+
+;;list forms
+(defmacro incf (place)
+    (list 'set! place (list '+ place 1))
+)
+
+(defmacro decf (place)
+    (list 'set! place (list '- place 1))
+)
+
+;---------------------------------------------
+(defmacro if (test t-clause else)
+    (list 'cond (list test t-clause)
+                (list ''default else)))
+(macroexpand '(if false 'istrue 'isfalse))
+(if false 'istrue 'isfalse)
+(if (atom '()) 'istrue 'isfalse)
+(if (atom '(1)) 'istrue 'isfalse)
+;---------------------------------------------
+(defmacro zero (x) (list 'def! x 0))
+        ;the body [(list ...)] is NOT evaluated before passing it to the defmacro special form.
+        ;def! quoted since we wanna eval x to whatever the macro is called with,
+        ;and only after that def! is to be evaluated along with the "replaced" value of x
+        ;x is evaluated at expansion time, so is (list ...)
+        ;def! is evaluated after expansion i.e. at normal execution/eval time
+
+(macroexpand '(zero a)) ;quoted cus macroexpand is a built-in
+(defmacro zeroo (x) `(set! ,x 0))
+;def overrides existing vars
+;---------------------------------------------
+
+
+;(defmacro add (a b)
+   ;(list '+ a b))
+;(add 1 2)
+;(def! b 3)
+;(def! c 4)
+;(add b c)
+;(defmacro add1 (x) '(list add x 1))) ;body quoted since we eval it before packing it into a function
+;(def! b 10)
+;(add1 8)
+;3 different ways to define a function
+(def! l1 (lambda () "anonymous"))
+(l1)
+(defun l2 () "named function")
+(l2)
+(defmacro l3 () "im a macro")
+(l3)
+;3 ways of implementing zero
+(def! zero1 (lambda (x) (def! x 0)))
+(zero1 a)
+a
+(defun zero2 (x) (def! x 0))
+(zero2 b)
+b
+(defmacro zero3 (x) (list 'def! x 0))
+(zero3 c)
+c
+;//todo is there a fundamental difference? can they be reduced to 1 special form?
+;//todo maybe to def and implement rest as macros, load core macros at start of program
+;//todo macro that takes unquoted args and passes them quoted to a normal function that normally requires  quoted args e.g. debug and debugq
+;;lexical scoping shenanigans
+(let* ((a 17))
+    (begin
+        (defun my-print-a ()
+            (print a))
+        (set! a 1717)))
+(let* ((a 8))
+  (my-print-a))

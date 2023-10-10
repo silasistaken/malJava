@@ -1,0 +1,14 @@
+(defmacro equal (x y)
+    `(eq ,x ,y))
+(defmacro append (list-of-args)
+    `(concat (car ,list-of-args)))
+(defun towers-of-hanoi (n)
+    (transfer 'a 'b 'c n))
+(defun move-disk (from to)
+    (list (list 'move 'disk 'from from 'to to)))
+(defun transfer (from to spare n)
+    (cond ((equal n 1) (move-disk from to))
+            ('t (append ((transfer from spare to (- n 1)); move top n-1 over to spare
+                        (move-disk from to); move largest disk
+                         (transfer spare to from (- n 1))))))); move top n-1 to largest
+(towers-of-hanoi 3)

@@ -1,0 +1,5 @@
+(def! a 0)
+(incf a)
+a
+(cons '(a b) '(c md))
+(cons '(a b) 'c)

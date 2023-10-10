@@ -1,0 +1,27 @@
+(defun subst (x y z) (cond ((atom z) (cond((eq z y) x) ((quote t) z))) ((quote t) (cons(subst x y (car z))(subst x y (cdr z))))))
+(subst (quote m) (quote b) (quote(a b (a b c) d)))
+
+
+;(defun fact (n) (cond ((eq n 0) 1) ('t fact((- n 1)))))
+((lambda (f) (f (quote (b c)))) (lambda (x) (cons (quote a) x))) ;--> (a b c) yes
+((lambda (f) (f (quote (b c)))) (quote (lambda (x) (cons (quote a) x)))) ;--> (a b c) no, b not found
+((lambda (f) (f 1 2)) +) ;--> 3
+(def! add1 (lambda (a) (+ a 1)))
+(add1 2)
+(defun add (x y) (+ x y))
+(add 3 6)
+
+(defun fact (n) (cond ((eq n 1) 1) ((quote t) (* n (fact (- n 1))))))
+(fact 1)
+(fact 3)
+(defun subst (x y z) (cond ((atom z) (cond((eq z y) x) ((quote t) z))) ((quote t) (cons(subst x y (car z))(subst x y (cdr z))))))
+(subst (quote m) (quote b) (quote(a b (a b c) d)))
+(cond ((atom(quote (a))) (quote truE)) ((quote t) (quote defaulT)))
+(atom (atom (quote a)))
+(atom (quote (atom (quote a))))
+(atom ())
+(eq (quote a) (quote a))
+(eq 12 1)
+(atom 2)
+(atom (quote (a d 3)))
+(atom '(a d 3))
